@@ -67,21 +67,21 @@ class CouponCode(models.Model):
 
 
 class Order(models.Model):
-    order_receipt= models.CharField(max_length=20)
-    order_id = models.CharField(max_length=20)
-    razorpay_payment_id = models.CharField(max_length=20)
-    razorpay_order_id = models.CharField(max_length=20)
-    razorpay_signature = models.CharField(max_length=20)
-    name = models.CharField(max_length=30)
+    order_receipt= models.CharField(max_length=50)
+    order_id = models.CharField(max_length=50)
+    razorpay_payment_id = models.CharField(max_length=50)
+    razorpay_order_id = models.CharField(max_length=50)
+    razorpay_signature = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
     address = models.TextField()
     phone_number = models.CharField(max_length=15)
-    email = models.CharField(max_length=20)
-    total = models.CharField(max_length=10)
-    subtotal = models.CharField(max_length=10)
+    email = models.CharField(max_length=50)
+    total = models.CharField(max_length=50)
+    subtotal = models.CharField(max_length=50)
     products = models.TextField()
     order_note = models.CharField(max_length=200)
-    shipping_charges = models.CharField(max_length=10)
-    couponname = models.CharField(max_length=10,null=True,blank=True)
+    shipping_charges = models.CharField(max_length=50)
+    couponname = models.CharField(max_length=50,null=True,blank=True)
     discount = models.CharField(max_length = 5,null=True,blank=True)
 
 
