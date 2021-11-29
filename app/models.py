@@ -71,7 +71,7 @@ class Order(models.Model):
     order_id = models.CharField(max_length=50)
     razorpay_payment_id = models.CharField(max_length=50)
     razorpay_order_id = models.CharField(max_length=50)
-    razorpay_signature = models.CharField(max_length=50)
+    razorpay_signature = models.CharField(max_length=100)
     name = models.CharField(max_length=50)
     address = models.TextField()
     phone_number = models.CharField(max_length=15)
