@@ -1,0 +1,186 @@
+{% extends "app/base.html" %}
+{% load static %}
+{% block content %}
+
+<style media="screen">
+  .transparent-bar {
+    position: relative;
+  }
+  .product-thumbnail img {
+    max-width: 98px;
+  }
+  .razorpay-payment-button {
+    display:none;
+  }
+</style>
+
+        <div class="breadcrumb-area bg-gray">
+            <div class="container">
+                <div class="breadcrumb-content text-center">
+                    <ul>
+                        <li>
+                            <a href="index.html">Home</a>
+                        </li>
+                        <li class="active">Place Order</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="checkout-main-area pt-120 pb-120">
+            <div class="container">
+
+                <div class="checkout-wrap pt-30">
+                    <div class="row">
+                        <form class="col-lg-7" id="checkoutform" method="POST" enctype="multipart/form-data">
+                          {% csrf_token %}
+                            <div class="billing-info-wrap mr-50">
+                                <h3>Billing Details</h3>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="billing-info mb-20">
+                                            <label>First Name <abbr class="required" title="required">*</abbr></label>
+                                            <input type="text" name="fname" id="fname" value="{{address.fname}}" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="billing-info mb-20">
+                                            <label>Last Name <abbr class="required" title="required">*</abbr></label>
+                                            <input type="text" name="lname" id="lname" value="{{address.lname}}" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12 col-md-12">
+                                        <div class="billing-info mb-20">
+                                            <label>Phone <abbr class="required" title="required">*</abbr></label>
+                                            <input type="text" name="phonenumber" id="phonenumber" value="{{address.phonenumber}}" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12">
+                                        <div class="billing-info mb-20">
+                                            <label>Email Address <abbr class="required" title="required">*</abbr></label>
+                                            <input type="text" name="email" id="email" value="{{address.email}}" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <div class="billing-select mb-20">
+                                            <label>Country <abbr class="required" title="required">*</abbr></label>
+                                            <select id="selectedcountry" value="India" readonly>
+                                                <option selected disabled>India</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="billing-info mb-20">
+                                            <label>Street Address <abbr class="required" title="required">*</abbr></label>
+                                            <input class="billing-address" placeholder="House number and street name" type="text" id="addressline1" value="{{address.addressline1}}" readonly>
+                                            <input placeholder="Apartment, suite, unit etc." type="text" id="addressline2" value="{{address.addressline2}}" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="billing-info mb-20">
+                                            <label>Town / City <abbr class="required" title="required">*</abbr></label>
+                                            <input type="text" id="city" value="{{address.city}}" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12">
+                                        <div class="billing-select mb-20">
+                                            <label>State <abbr class="required" title="required">*</abbr></label>
+                                            <select id="checkoutstate"  readonly>
+                                                <option selected disabled>{{selectedstate.name}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12">
+                                        <div class="billing-info mb-20">
+                                            <label>Postcode / ZIP <abbr class="required" title="required">*</abbr></label>
+                                            <input type="text"  id="pincode" value="{{address.pincode}}" readonly>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="additional-info-wrap">
+                                    <label>Order notes</label>
+                                    <textarea placeholder="Notes about your order, e.g. special notes for delivery. " name="message" id="ordernote" value="{{address.ordernote}}" readonly></textarea>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="col-lg-5">
+                            <div class="your-order-area">
+                                <h3>Your order</h3>
+                                <div class="your-order-wrap gray-bg-4">
+                                    <div class="your-order-info-wrap">
+                                        <div class="your-order-info">
+                                            <ul>
+                                                <li>Product <span>Total</span></li>
+                                            </ul>
+                                        </div>
+                                        <div class="your-order-middle">
+                                            <ul>
+                                                {% for i,j,k in cart %}
+                                                <li>{{i.title}} X {{j}}  <span>Rs. {{k}} </span></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                        <div class="your-order-info order-subtotal">
+                                            <ul>
+                                                <li>Subtotal <span>Rs. {{subtotal}} </span></li>
+                                            </ul>
+                                        </div>
+                                        <div class="your-order-info order-shipping">
+                                            <ul>
+                                                <li>Shipping <p>Rs. {{shippingcharge}}</p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        {% if discount != 0 %}
+                                        <div class="your-order-info order-shipping">
+                                            <ul>
+                                                <li>Coupon Discount <p>- Rs. {{discount}}</p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        {% endif %}
+                                        <div class="your-order-info order-total">
+                                            <ul>
+                                                <li>Total <span>Rs. {{total}} </span></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="Place-order">
+                                  <form action="/order-placed/" method="POST" enctype="multipart/form-data" id="razorpayform">
+                                                        {% csrf_token %}
+                                                        <script
+                                                      src="https://checkout.razorpay.com/v1/checkout.js"
+                                                      data-key="rzp_test_lYOMizShZ9dK1d" // Enter the Key ID generated from the Dashboard
+                                                      data-amount="{{order_amount}}" // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                                                      data-currency="INR"
+                                                      data-order_id="{{order_id}}"//This is a sample Order ID. Pass the `id` obtained in the response of the previous step.
+                                                      data-name="Posterwa"
+                                                      data-description=" "
+                                                      data-image=""
+                                                      data-prefill.name="{{address.fname}}"
+                                                      data-prefill.email="{{address.email}}"
+                                                      data-prefill.contact="{{address.phonenumber}}"
+                                                      data-theme.color="#ff084e"
+                                                  ></script>
+                                                  <input type="hidden" custom="Hidden Element" name="hidden">
+                                                  </form>
+                                                  <div class="Place-order">
+                                                      <a id="placeorder">Place Order</a>
+                                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+{% endblock %}

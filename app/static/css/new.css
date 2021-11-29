@@ -1,0 +1,23 @@
+.about-us-logo img {
+  max-width: 250px;
+}
+#notificationmodal .modal-dialog {
+  max-width: 500px;
+  width: auto;
+  margin-top:5%;
+}
+#notificationmodal .modal-dialog .modal-body {
+  padding: 15px 0px;
+}
+#notificationmodal .modal-header {
+  border: none;
+  background-color: #4BB543;
+  display: none;
+}
+#notificationmodal .modal-content {
+  border: 5px solid #4BB543;
+}
+#notificationmodal .modal-content h3 {
+  margin: 0;
+  text-align: center;
+}
