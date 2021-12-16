@@ -53,11 +53,11 @@
                                             <td class="product-name"><a href="#">{{i.title}}</a></td>
                                             <td class="product-price-cart"><span class="amount">Rs. {{i.selling_price}}</span></td>
                                             <td class="product-quantity pro-details-quality">
-                                                <div class="cart-plus-minus">
-                                                    <input class="cart-plus-minus-box cartquantity" type="text" name="qtybutton" value="{{q}}">
+                                                <div class="cart-plus-minus cartpage-quantity" data-id="{{i.id}}">
+                                                    <input class="cart-plus-minus-box cartquantity" id="cartpagequantity{{i.id}}" type="text" name="qtybutton" value="{{q}}">
                                                 </div>
                                             </td>
-                                            <td class="product-subtotal">Rs. {{p}}</td>
+                                            <td class="product-subtotal" id="cartpageproductprice{{i.id}}">Rs. {{p}}</td>
                                             <td class="product-remove deletefromcart" data-id="{{i.id}}">
                                                 <a data-id="{{i.id}}"><i class="icon_close" data-id="{{i.id}}"></i></a>
                                             </td>
@@ -142,7 +142,7 @@
                                     <div class="title-wrap">
                                         <h4 class="cart-bottom-title section-bg-gary-cart">Cart Total</h4>
                                     </div>
-                                    <h5>Total products <span>Rs. {{subtotal}}</span></h5>
+                                    <h5>Total products <span id="subtotal">Rs. {{subtotal}}</span></h5>
                                     <div id="shippingsection">
                                       {% if shippingcharge != 0 %}
                                       <h5>Shipping Charge <span>Rs. {{shippingcharge}}</span></h5>

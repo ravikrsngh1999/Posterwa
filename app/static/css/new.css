@@ -7,7 +7,7 @@
   margin-top:5%;
 }
 #notificationmodal .modal-dialog .modal-body {
-  padding: 15px 0px;
+  padding: 15px 20px;
 }
 #notificationmodal .modal-header {
   border: none;
@@ -20,4 +20,10 @@
 #notificationmodal .modal-content h3 {
   margin: 0;
   text-align: center;
+}
+.mobile-logo a img {
+  max-width: 150px;
+}
+.contact-info-wrap .footer-logo a img{
+  max-width: 150px;
 }

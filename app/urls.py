@@ -11,7 +11,7 @@ urlpatterns = [
     path('products/',products,name="products"),
     path('wishlist/',wishlist,name="wishlist"),
     path('cart/',cart,name="cart"),
-    path('shop/',shop,name="shop"),
+    path('shop/<str:x>/',shop,name="shop"),
     path('shoppagedata/',shoppagedata,name="shoppagedata"),
     path('getshippingquote/',getshippingquote,name="getshippingquote"),
     path('applycoupon/',applycoupon,name="applycoupon"),
@@ -19,6 +19,7 @@ urlpatterns = [
     path('place-order/',placeorder,name="placeorder"),
     path('order-placed/',orderplaced,name="orderplaced"),
     path('contact-us/',contactus,name="contactus"),
+    path('send-contact-query/',sendcontactquery,name="sendcontactquery"),
     path('thank-you/',thankyou,name="thankyou"),
 
 ]

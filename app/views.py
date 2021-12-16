@@ -87,6 +87,22 @@ def productdetails(request,pk):
 
 
 
+def calculatecartprice(request):
+    c = request.session.get('cart',[])
+    all =[]
+    subtotal = 0
+    for i in c:
+        l=[]
+        l.append(Product.objects.get(id=i[0]))
+        l.append(i[1])
+        l.append(i[2])
+        subtotal = subtotal + int(i[2])
+        all.append(l)
+
+    if subtotal > 360:
+        request.session['shippingcharge'] = 0
+    total = subtotal + request.session.get('shippingcharge',0) - request.session.get('discount',0)
+    return subtotal,total,all
 
 
 
@@ -134,16 +150,23 @@ def deletefromcart(request):
 
 
 def updatecart(request):
-    id = request.GET['id']
-    p = Product.objects.get(id=id)
-    quantity = request.GET['quantity']
-    cart = request.session.get('cart',[])
-    c = [item[0] for item in cart]
-    i = c.index(id)
-    cart[i][1] = quantity
-    cart[i][2] = p.selling_price * quantity
-    request.session['cart'] = cart
-    return JsonResponse(cart[i],safe=True)
+	id = request.GET['id']
+	p = Product.objects.get(id=id)
+	quantity = request.GET['quantity']
+	cart = request.session.get('cart',[])
+	print(cart)
+	c = [item[0] for item in cart]
+	i = c.index(id)
+	cart[i][1] = int(quantity)
+	cart[i][2] = p.selling_price * int(quantity)
+	request.session['cart'] = cart
+	print(request.session['cart'])
+	subtotal,total,all = calculatecartprice(request)
+	return JsonResponse({
+		"data":cart[i],
+		"subtotal": subtotal,
+		"total":total
+	},safe=True)
 
 
 
@@ -183,28 +206,14 @@ def wishlist(request):
 
 
 
-def calculatecartprice(request):
-    c = request.session.get('cart',[])
-    all =[]
-    subtotal = 0
-    for i in c:
-        l=[]
-        l.append(Product.objects.get(id=i[0]))
-        l.append(i[1])
-        l.append(i[2])
-        subtotal = subtotal + i[2]
-        all.append(l)
 
-    if subtotal > 360:
-        request.session['shippingcharge'] = 0
-    total = subtotal + request.session.get('shippingcharge',0) - request.session.get('discount',0)
-    return subtotal,total,all
 
 
 
 
 def cart(request):
     w = request.session.get('wishlist',[])
+
     c = request.session.get('cart',[])
     subtotal,total,all = calculatecartprice(request)
 
@@ -226,17 +235,23 @@ def cart(request):
 
 
 
-def shop(request):
-    w = request.session.get('wishlist',[])
-    c = request.session.get('cart',[])
+def shop(request,x):
+	w = request.session.get('wishlist',[])
+	c = request.session.get('cart',[])
+	print(x)
+	if x == 'all':
+		productlist = Product.objects.all().order_by("-id")
+	else:
+		productlist = Product.objects.filter(subcategory__category__name__icontains = x).order_by("-id")
 
-    context = {
+
+	context = {
         'no_of_items_in_wishlist':len(w),
         'no_of_items_in_cart':len(c),
         'all_categories':Category.objects.all(),
-        'productlist': Product.objects.all().order_by("-id")
+        'productlist': productlist
     }
-    return render(request,'app/shop.html',context)
+	return render(request,'app/shop.html',context)
 
 
 def shoppagedata(request):
@@ -450,3 +465,21 @@ def contactus(request):
 		'no_of_items_in_wishlist':len(w),
         'no_of_items_in_cart':len(c),
 	})
+
+
+def sendcontactquery(request):
+	name = request.GET['name']
+	email = request.GET['email']
+	subject = request.GET['subject']
+	message = request.GET['message']
+	print(name)
+	plaintext = get_template('email/txtfiles/query.txt')
+	htmly= get_template('email/query.html')
+	d = {
+		'name' : request.GET['name'],
+		'email' : request.GET['email'],
+		'subject' : request.GET['subject'],
+		'message' : request.GET['message']
+	}
+	templateemail("One Query For You." , "ravikrsngh.rks@gmail.com" , plaintext , htmly , d)
+	return JsonResponse({"message":"Sent"})

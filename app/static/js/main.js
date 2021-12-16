@@ -1110,9 +1110,17 @@
          data: {id:id,quantity:quantity,from:from},
          success: function (response) {
            console.log(response);
-           document.getElementById('no_of_items_in_cart').innerHTML = '<i class="icon-basket-loaded" ></i><span class="pro-count red" >' + response['data'].length + '</span>';
-           document.getElementById('no_of_items_in_cart_mob').innerHTML = '<i class="icon-basket-loaded" ></i><span class="pro-count red" >' + response['data'].length + '</span>';
+           if (document.getElementById('no_of_items_in_cart')) {
+             document.getElementById('no_of_items_in_cart').innerHTML = '<i class="icon-basket-loaded" ></i><span class="pro-count red" >' + response['data'].length + '</span>';
+           }
+           if (document.getElementById('no_of_items_in_cart_mob')) {
+             document.getElementById('no_of_items_in_cart_mob').innerHTML = '<i class="icon-basket-loaded" ></i><span class="pro-count red" >' + response['data'].length + '</span>';
+           }
+           if (document.getElementById('no_of_items_in_cart-phone')) {
+             document.getElementById('no_of_items_in_cart-phone').innerHTML = '<i class="icon-basket-loaded" ></i><span class="pro-count red" >' + response['data'].length + '</span>';
+           }
            ModalControl("Added to the Cart!")
+
          }
       })
 
@@ -1149,8 +1157,15 @@
          data: {id:id},
          success: function (response) {
            console.log(response);
-           document.getElementById('no_of_items_in_wishlist').innerHTML = '<i class="icon-heart" ></i><span class="pro-count red" >' + response['data'].length + '</span>';
-           document.getElementById('no_of_items_in_wishlist_mob').innerHTML = '<i class="icon-heart" ></i><span class="pro-count red" >' + response['data'].length + '</span>';
+           if (document.getElementById('no_of_items_in_wishlist')) {
+             document.getElementById('no_of_items_in_wishlist').innerHTML = '<i class="icon-heart" ></i><span class="pro-count red" >' + response['data'].length + '</span>';
+           }
+           if (document.getElementById('no_of_items_in_wishlist_mob')) {
+             document.getElementById('no_of_items_in_wishlist_mob').innerHTML = '<i class="icon-heart" ></i><span class="pro-count red" >' + response['data'].length + '</span>';
+           }
+           if (document.getElementById('no_of_items_in_wishlist-phone')) {
+             document.getElementById('no_of_items_in_wishlist-phone').innerHTML = '<i class="icon-heart" ></i><span class="pro-count red" >' + response['data'].length + '</span>';
+           }
            ModalControl("Added to wishlist.")
          }
       })
@@ -1289,6 +1304,17 @@
       }
     }
 
+    function checkemail(id){
+      let str = document.getElementById(id).value
+      let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+      if (str.match(regexEmail)) {
+        return true;
+      } else {
+        alert("Invalid Email")
+        return false;
+      }
+    }
+
 
     $("#continuecheckout").click(function(e){
       if (checkvalidity('fname') && checkvalidity('lname') && checkvalidity('phonenumber') && checkvalidity('email') && checkvalidity('addressline1') && checkvalidity('checkoutstate') && checkvalidity('pincode') && checkvalidity('city')) {
@@ -1314,6 +1340,64 @@
           console.log(response);
           document.getElementById('shippingcharge').innerHTML = 'Rs. '+ response['shippingcharge']
           document.getElementById('grandtotal').innerHTML = "Rs. " + response['total']
+        }
+      })
+    })
+
+
+    $("#contact-btn-submit").on('click',function(e){
+
+      var contact_name = document.getElementById('contact_name').value
+      var contact_email = document.getElementById('contact_email').value
+      var contact_subject = document.getElementById('contact_subject').value
+      var contact_message = document.getElementById('contact_message').value
+
+      if (checkvalidity('contact_name') && checkvalidity('contact_email') && checkvalidity('contact_subject') && checkvalidity('contact_message')) {
+        if (checkemail('contact_email')) {
+          $.ajax({
+            type:"GET",
+            url:"/send-contact-query/",
+            data:{
+              name:contact_name,
+              email:contact_email,
+              subject:contact_subject,
+              message:contact_message,
+            },
+            success:function(response){
+              ModalControl("Query Raised. We will contact you in next 24hrs.")
+              setTimeout(function(){
+                location.reload()
+              },1500)
+            }
+          })
+
+        }
+      }
+
+
+
+    })
+
+
+
+
+    $(document).on('click','.cartpage-quantity .qtybutton',function(e){
+      console.log($(e.target).parent()[0]);
+      var id = $($(e.target).parent()[0]).attr('data-id')
+      var quantity = document.getElementById('cartpagequantity' + id).value
+      console.log(quantity);
+      $.ajax({
+        type:"GET",
+        url:'/update-cart/',
+        data:{
+          id:id,
+          quantity:quantity
+        },
+        success:function(res){
+          console.log(res);
+          document.getElementById('grandtotal').innerHTML = "Rs. " + res['total']
+          document.getElementById('subtotal').innerHTML = "Rs. " + res['subtotal']
+          document.getElementById('cartpageproductprice'+id).innerHTML = "Rs. " + res['data'][2]
         }
       })
     })
