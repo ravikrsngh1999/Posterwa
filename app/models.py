@@ -28,6 +28,7 @@ class Product(models.Model):
     description = models.TextField(max_length = 200,default="")
     selling_price = models.IntegerField(default = 0)
     cost_price = models.IntegerField(default = 0)
+    discount_val = models.IntegerField(default=0)
     on_discount = models.BooleanField(default = False)
     is_featured = models.BooleanField(default=False)
     avg_rating = models.CharField(max_length = 4,default = "")

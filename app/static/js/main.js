@@ -16,6 +16,8 @@
     $('.hero-slider-active-1').slick({
         slidesToShow: 1,
         slidesToScroll: 1,
+        autoplay:true,
+        autoplaySpeed:5000,
         fade: true,
         loop: true,
         dots: true,
@@ -28,6 +30,8 @@
     $('.hero-slider-active-2').slick({
         slidesToShow: 1,
         slidesToScroll: 1,
+        autoplay:true,
+        autoplaySpeed:5000,
         fade: true,
         loop: true,
         dots: false,
@@ -36,7 +40,7 @@
         nextArrow: '<span class="slider-icon-1-next"><i class="icon-arrow-right"></i></span>',
     });
 
-    /*------ Hero slider active 3 ----*/
+    /*------ Hero slider active 3
     $('.hero-slider-active-3').slick({
         slidesToShow: 1,
         slidesToScroll: 1,
@@ -45,6 +49,8 @@
         dots: true,
         arrows: false,
     });
+
+    ----*/
 
     /*------ Product slider active ----*/
     $('.product-slider-active').slick({
@@ -412,9 +418,9 @@
     $('.nice-select').niceSelect();
 
 
-    /*-------------------------
+    /* -------------------------
       Category active
-    --------------------------*/
+    -------------------------- */
     $('.categori-show').on('click', function(e) {
         e.preventDefault();
         $('.categori-hide , .categori-hide-2').slideToggle(900);
@@ -435,9 +441,9 @@
     });
 
 
-    /*--------------------------------
+    /* --------------------------------
         Sidebar product active
-    -----------------------------------*/
+    ----------------------------------- */
     $('.sidebar-product-active').slick({
         slidesToShow: 1,
         slidesToScroll: 1,
@@ -567,9 +573,7 @@
         ]
     });
 
-    /*--------------------------------
-        Product slider active 7
-    -----------------------------------*/
+    /* -------- -------- -------- -------- Product slider active 7 --------- ---------- -------- -------- */
     $('.product-slider-active-7').slick({
         slidesToShow: 4,
         slidesToScroll: 1,
@@ -606,9 +610,9 @@
         ]
     });
 
-    /*--------------------------------
+    /* ---------------- ----------------
         Product slider active 8
-    -----------------------------------*/
+    ------------------- ---------------- */
     $('.product-slider-active-8').slick({
         slidesToShow: 5,
         slidesToScroll: 1,
@@ -724,15 +728,19 @@
     $(function() {
         sliderrange.slider({
             range: true,
-            min: 16,
+            min: 50,
             max: 400,
             values: [0, 1000],
             slide: function(event, ui) {
                 amountprice.val("Rs." + ui.values[0] + " - Rs." + ui.values[1]);
+                document.getElementById('minprice').value = sliderrange.slider("values", 0)
+                document.getElementById('maxprice').value = sliderrange.slider("values", 1)
             }
         });
         amountprice.val("Rs." + sliderrange.slider("values", 0) +
             " - Rs." + sliderrange.slider("values", 1));
+        document.getElementById('minprice').value = sliderrange.slider("values", 0)
+        document.getElementById('maxprice').value = sliderrange.slider("values", 1)
     });
 
     /*----------------------------
@@ -1221,14 +1229,18 @@
         categoryvalue.push(boxes[i].value)
       }
       console.log(categoryvalue);
+      if (categoryvalue.length == 0) {
+        categoryvalue = ["all"]
+      }
+      var minprice = document.getElementById('minprice').value
+      var maxprice = document.getElementById('maxprice').value
       $.ajax({
         type:'GET',
         url:'/shoppagedata/',
-        data:{data:categoryvalue},
+        data:{data:categoryvalue,minprice:minprice,maxprice:maxprice},
         success:function(response){
           console.log(response);
           $("#allproducts").html(response)
-
         }
       })
 
@@ -1247,6 +1259,7 @@
       });
     }
 
+    $("#filterprice").click(getshopdata)
     $("#filterprice").click(getshopdata)
 
 
@@ -1298,15 +1311,27 @@
       console.log(str);
       if (str.replace(" ", "").length == 0) {
         $('#'+id).focus()
+
         return false
       } else {
         return true
       }
     }
+    function checkphone(id) {
+      let str = document.getElementById(id).value
+      console.log(str);
+      if (str.length == 10) {
+        return true
+      } else {
+        $('#'+id).focus()
+        alert("Invalid Phone Number")
+        return false
+      }
+    }
 
     function checkemail(id){
       let str = document.getElementById(id).value
-      let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+      let regexEmail =  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       if (str.match(regexEmail)) {
         return true;
       } else {
@@ -1317,7 +1342,7 @@
 
 
     $("#continuecheckout").click(function(e){
-      if (checkvalidity('fname') && checkvalidity('lname') && checkvalidity('phonenumber') && checkvalidity('email') && checkvalidity('addressline1') && checkvalidity('checkoutstate') && checkvalidity('pincode') && checkvalidity('city')) {
+      if (checkvalidity('fname') && checkvalidity('lname') && checkphone('phonenumber') && checkemail('email') && checkvalidity('addressline1') && checkvalidity('checkoutstate') && checkvalidity('pincode') && checkvalidity('city')) {
         $("#checkoutform").submit()
       }
     })

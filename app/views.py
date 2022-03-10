@@ -184,10 +184,6 @@ def addtowishlist(request):
 
 
 
-
-
-
-
 def wishlist(request):
     w = request.session.get('wishlist',[])
     cart = request.session.get('cart',[])
@@ -201,12 +197,6 @@ def wishlist(request):
         'all_categories':Category.objects.all(),
     }
     return render(request,'app/wishlist.html',context)
-
-
-
-
-
-
 
 
 
@@ -248,19 +238,26 @@ def shop(request,x):
 	context = {
         'no_of_items_in_wishlist':len(w),
         'no_of_items_in_cart':len(c),
-        'all_categories':Category.objects.all(),
+        'all_categories':Category.objects.all().order_by("name"),
         'productlist': productlist
     }
 	return render(request,'app/shop.html',context)
 
 
 def shoppagedata(request):
-    print(request.GET)
-    print(request.GET.getlist('data[]'))
-    productlist = Product.objects.filter(subcategory__category__name__in = request.GET.getlist('data[]') )
-    serializer=ProductSerializer(productlist,many=True)
-    html = render_to_string('app/ajax/productlist.html', {'productlist': productlist})
-    return HttpResponse(html)
+	print(request.GET)
+	print(request.GET.getlist('data'))
+	minprice = request.GET['minprice']
+	maxprice = request.GET['maxprice']
+	if "all" in request.GET.getlist('data'):
+		productlist = Product.objects.all()
+	else:
+		productlist = Product.objects.filter(subcategory__category__name__in = request.GET.getlist('data[]') )
+
+	productlist = productlist.filter(selling_price__gte = minprice).filter(selling_price__lte = maxprice)
+	serializer=ProductSerializer(productlist,many=True)
+	html = render_to_string('app/ajax/productlist.html', {'productlist': productlist})
+	return HttpResponse(html)
 
 
 
