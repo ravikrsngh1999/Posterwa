@@ -480,3 +480,24 @@ def sendcontactquery(request):
 	}
 	templateemail("One Query For You." , "ravikrsngh.rks@gmail.com" , plaintext , htmly , d)
 	return JsonResponse({"message":"Sent"})
+
+
+
+
+def register(request):
+	w = request.session.get('wishlist',[])
+	c = request.session.get('cart',[])
+	if request.method == "POST":
+		print(request.POST)
+		obj = RegisterUser.objects.create(
+			name = request.POST['name'],
+			email = request.POST['email'],
+			dob = request.POST["dob"],
+			gender = request.POST['gender']
+		)
+		print(obj.name)
+		return HttpResponseRedirect('/')
+	return render(request,'app/register.html',{
+		'no_of_items_in_wishlist':len(w),
+        'no_of_items_in_cart':len(c),
+	})

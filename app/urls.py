@@ -21,5 +21,5 @@ urlpatterns = [
     path('contact-us/',contactus,name="contactus"),
     path('send-contact-query/',sendcontactquery,name="sendcontactquery"),
     path('thank-you/',thankyou,name="thankyou"),
-
+    path('register/',register,name="register"),
 ]

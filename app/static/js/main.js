@@ -1428,6 +1428,21 @@
     })
 
 
+    $("#register-btn-submit").click(function(){
+      if (checkvalidity("register_name") && checkemail("register_email") && checkvalidity("dob") ) {
+        var name = document.getElementById('register_name').value
+        var email = document.getElementById('register_email').value
+        var dob = document.getElementById('dob').value
+        var gender = document.getElementById('gender').value
+        $("#register-form").submit()
+      } else {
+        return
+      }
+
+
+    })
+
+
 
 
 

@@ -1,0 +1,82 @@
+{% extends "app/base.html" %}
+{% load static %}
+{% block content %}
+
+<style media="screen">
+  .transparent-bar {
+    position: relative;
+  }
+  .product-thumbnail img {
+    max-width: 98px;
+  }
+
+
+@media only screen and (max-width: 767px) {
+  .contact-from select {
+      margin-bottom: 20px;
+  }
+  .contact-from select {
+      background: #f7f7f7 none repeat scroll 0 0;
+      border: none;
+      color: #000;
+      height: 60px;
+      padding: 2px 20px;
+      margin-bottom: 30px;
+      position: relative;
+  }
+}
+
+
+
+</style>
+
+        <div class="breadcrumb-area bg-gray">
+            <div class="container">
+                <div class="breadcrumb-content text-center">
+                    <ul>
+                        <li>
+                            <a href="/">Home</a>
+                        </li>
+                        <li class="active">Register</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="contact-area pt-115 pb-120">
+            <div class="container">
+                <div class="get-in-touch-wrap">
+                    <h3>Register here!</h3>
+                    <div class="contact-from contact-shadow">
+                        <form id="register-form" method="post">
+                          {% csrf_token %}
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12">
+                                    <input name="name" type="text" placeholder="Name" id="register_name">
+                                </div>
+                                <div class="col-lg-12 col-md-12">
+                                    <input name="email" type="email" placeholder="Email" id="register_email">
+                                </div>
+                                <div class="col-lg-12 col-md-12">
+                                    <input name="dob" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" placeholder="Date of Birth" id="dob">
+                                </div>
+                                <div class="col-lg-12 col-md-12">
+                                    <select class="" name="gender" id="gender">
+                                      <option value="Male">Male</option>
+                                      <option value="Female">Female</option>
+                                      <option value="Others">Others</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-12 col-md-12">
+                                    <button class="submit" type="button" id="register-btn-submit">Register</button>
+                                </div>
+                            </div>
+                        </form>
+                        <p class="form-messege"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+{% endblock %}
